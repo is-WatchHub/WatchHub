@@ -5,7 +5,6 @@
 *.user
 *.userprefs
 *.sln.ide
-*.sln
 *.ncb
 *.sdf
 *.opensdf
