@@ -50,7 +50,6 @@ packages/*
 
 # ASP.NET
 wwwroot/
-appsettings*.json
 *.db
 
 # Other
