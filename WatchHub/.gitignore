@@ -1,0 +1,94 @@
+# Visual Studio
+.vscode/
+.vs/
+*.suo
+*.user
+*.userprefs
+*.sln.ide
+*.sln
+*.ncb
+*.sdf
+*.opensdf
+*.cache
+*.pdb
+*.ilk
+*.log
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Oo]bj/
+[Bb]in/
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/*
+**/packages/*
+**/packages/*/build/*
+**/packages/*/lib/*
+**/packages/*/tools/*
+**/packages/*/content/*
+*.props
+*.targets
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+.idea_modules/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Code analysis
+*.rule
+*.ruleset
+*.pdb
+
+# ASP.NET
+wwwroot/
+appsettings*.json
+*.db
+
+# Other
+*.dll
+*.exe
+*.exe.config
+*.pdb
+*.mdb
+*.mdb.config
+*.dbmdl
+*.dbproj
+*.jfm
+*.jfm.mdf
+*.jfm.ldf
+*.coverage
+*.coveragexml
+*.trx
+*.settings
+
+# User-specific files
+*.rsuser
+*.rscache
+*.sln.ide
+
+# C++/CLI
+*.obj
+*.o
+
+# Miscellaneous
+*.cache
+*.ilk
+*.idb
+*.ipch
+*.sdf
+*.opensdf
+*.cache
+
+# JetBrains Rider
+.idea/
+*.sln.iml
