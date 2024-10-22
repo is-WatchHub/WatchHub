@@ -16,10 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationDomain", "Integr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoviesDomain", "MoviesDomain\MoviesDomain.csproj", "{C413C56F-618C-450B-9C16-09F7672C53AF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserManagement", "UserManagement", "{1685B708-6E5E-4A70-B4D7-C4B3B6BEF67A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserTestProject", "UserTestProject\UserTestProject.csproj", "{7C78143B-6A88-42E6-8924-4364CF28A0C9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,13 +54,5 @@ Global
 		{C413C56F-618C-450B-9C16-09F7672C53AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C413C56F-618C-450B-9C16-09F7672C53AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C413C56F-618C-450B-9C16-09F7672C53AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C78143B-6A88-42E6-8924-4364CF28A0C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C78143B-6A88-42E6-8924-4364CF28A0C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C78143B-6A88-42E6-8924-4364CF28A0C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C78143B-6A88-42E6-8924-4364CF28A0C9}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{90368B60-C1D3-4521-8061-4294A3411234} = {1685B708-6E5E-4A70-B4D7-C4B3B6BEF67A}
-		{7C78143B-6A88-42E6-8924-4364CF28A0C9} = {1685B708-6E5E-4A70-B4D7-C4B3B6BEF67A}
 	EndGlobalSection
 EndGlobal
