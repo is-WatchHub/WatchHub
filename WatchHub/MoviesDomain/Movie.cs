@@ -6,7 +6,5 @@ public class Movie
     public string Title { get; set; }
     public string Description { get; set; }
     public Genre Genre { get; set; }
-    public double Rating { get; set; }
-    public string CoverImageUrl { get; set; }
-    public VideoPlayer Player { get; set; }
+    public MovieMedia Media { get; set; }
 }
