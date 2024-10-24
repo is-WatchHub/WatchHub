@@ -6,4 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\IntegrationApplication\IntegrationApplication.csproj" />
+      <ProjectReference Include="..\MoviesApplication\MoviesApplication.csproj" />
+      <ProjectReference Include="..\UserManagementApplication\UserManagementApplication.csproj" />
+    </ItemGroup>
+
 </Project>
