@@ -1,4 +1,4 @@
-﻿namespace MoviesApplication.Dtos;
+﻿namespace MoviesApplication.Dtos.Incoming;
 
 public class DeleteMovieDto
 {

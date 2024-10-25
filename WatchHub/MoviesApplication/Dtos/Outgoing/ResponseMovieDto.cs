@@ -1,6 +1,6 @@
 ﻿using MoviesDomain;
 
-namespace MoviesApplication.Dtos.Outcoming;
+namespace MoviesApplication.Dtos.Outgoing;
 
 public class ResponseMovieDto
 {
