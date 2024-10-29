@@ -2,7 +2,8 @@ using UserManagementDomain;
 
 public interface IUserRepository
 {
-    public User CreateUser(User user);
-    public User GetUserByID(Guid id);
-    public User? FindUserByID(Guid id);
+    Task<User> Create(User user);
+    Task<User> GetById(Guid id);
+    Task<User> GetByLogin(string login);
+    Task<User?> FindById(Guid id);
 }
