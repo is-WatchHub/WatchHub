@@ -12,4 +12,9 @@
       <ProjectReference Include="..\UserManagementApplication\UserManagementApplication.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Moq" Version="4.20.72" />
+      <PackageReference Include="xunit" Version="2.9.2" />
+    </ItemGroup>
+
 </Project>
