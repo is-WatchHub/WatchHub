@@ -9,6 +9,7 @@ namespace Infrastructure
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable(Constants.USER_TABLE_NAME);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName(Constants.USER_ID_COLUMN_NAME).IsRequired();
             builder.Property(x => x.Login).HasColumnName(Constants.USER_LOGIN_COLUMN_NAME).HasMaxLength(45).IsRequired();
             builder.Property(x => x.PasswordHash).HasColumnName(Constants.USER_PASSWORD_COLUMN_NAME).HasMaxLength(100).IsRequired();
