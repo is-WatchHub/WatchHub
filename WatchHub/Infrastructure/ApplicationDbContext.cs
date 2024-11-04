@@ -6,12 +6,7 @@ namespace Infrastructure
 {
     public sealed class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-            //Database.EnsureDeleted();
-            Database.EnsureCreated();
-        }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) { }
 
         public DbSet<User> Users { get; set; }
 
