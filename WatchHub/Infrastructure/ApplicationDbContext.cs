@@ -1,5 +1,4 @@
-﻿using Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MoviesDomain;
 using UserManagementDomain;
 

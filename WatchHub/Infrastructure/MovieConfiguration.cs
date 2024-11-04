@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MoviesDomain;
 
-namespace Infrastructure.Configurations
+namespace Infrastructure
 {
     internal class MovieConfiguration : IEntityTypeConfiguration<Movie>
     {
