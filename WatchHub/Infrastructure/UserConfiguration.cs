@@ -1,20 +1,40 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UserManagementDomain;
 
 namespace Infrastructure
 {
-    internal class UserConfiguration : IEntityTypeConfiguration<User>
+    internal class UserConfiguration : IEntityTypeConfiguration<ApplictionUser>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<ApplictionUser> builder)
         {
-            builder.ToTable(Constants.USER_TABLE_NAME);
+            builder.ToTable(UserTableConstants.USER_TABLE_NAME);
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName(Constants.USER_ID_COLUMN_NAME).IsRequired();
-            builder.Property(x => x.Login).HasColumnName(Constants.USER_LOGIN_COLUMN_NAME).HasMaxLength(45).IsRequired();
-            builder.Property(x => x.PasswordHash).HasColumnName(Constants.USER_PASSWORD_COLUMN_NAME).HasMaxLength(100).IsRequired();
-            builder.Property(x => x.Email).HasColumnName(Constants.USER_EMAIL_COLUMN_NAME).HasMaxLength(45).IsRequired();
-            builder.Property(x => x.Role).HasColumnName(Constants.USER_ROLE_COLUMN_NAME).HasConversion<int>().IsRequired();
+
+            builder.Property(x => x.Id)
+                .HasColumnName(UserTableConstants.USER_ID_COLUMN_NAME)
+                .IsRequired();
+
+            builder.Property(x => x.UserName)
+                .HasColumnName(UserTableConstants.USER_LOGIN_COLUMN_NAME)
+                .HasMaxLength(UserTableConstants.USER_LOGIN_COLUMN_MAX_LENGTH)
+                .IsRequired();
+
+            builder.Property(x => x.PasswordHash)
+                .HasColumnName(UserTableConstants.USER_PASSWORD_COLUMN_NAME)
+                .HasMaxLength(UserTableConstants.USER_PASSWORD_COLUMN_MAX_LENGTH)
+                .IsRequired();
+
+            builder.Property(x => x.Email)
+                .HasColumnName(UserTableConstants.USER_EMAIL_COLUMN_NAME)
+                .HasMaxLength(UserTableConstants.USER_EMAIL_COLUMN_MAX_LENGTH)
+                .IsRequired();
+
+            builder.Property(x => x.Role)
+                .HasColumnName(UserTableConstants.USER_ROLE_COLUMN_NAME)
+                .HasConversion<string>()
+                .IsRequired();
         }
     }
 }
