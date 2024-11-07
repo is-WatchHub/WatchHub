@@ -12,9 +12,9 @@ builder.Services.AddAutoMapper(
     typeof(IntegrationMappingProfile)
 );
 
-builder.Services.AddScoped<IUserManagementMapper, UserManagementMapper>();
-builder.Services.AddScoped<IMoviesMapper, MoviesMapper>();
-builder.Services.AddScoped<IIntegrationMapper, IntegrationMapper>();
+builder.Services.AddSingleton<IUserManagementMapper, UserManagementMapper>();
+builder.Services.AddSingleton<IMoviesMapper, MoviesMapper>();
+builder.Services.AddSingleton<IIntegrationMapper, IntegrationMapper>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
