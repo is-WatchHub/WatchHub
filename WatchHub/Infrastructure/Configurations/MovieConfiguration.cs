@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Infrastructure.Constants;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MoviesDomain;
 
-namespace Infrastructure;
+namespace Infrastructure.Configurations;
 
-internal class MovieConfiguration : IEntityTypeConfiguration<MoviesDomain.Movie>
+internal class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
-    public void Configure(EntityTypeBuilder<MoviesDomain.Movie> builder)
+    public void Configure(EntityTypeBuilder<Movie> builder)
     {
         builder
             .ToTable(MovieTableConstants.MOVIE_TABLE_NAME);
@@ -53,4 +55,3 @@ internal class MovieConfiguration : IEntityTypeConfiguration<MoviesDomain.Movie>
         });
     }
 }
-

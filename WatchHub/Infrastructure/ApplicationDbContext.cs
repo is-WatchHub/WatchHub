@@ -1,17 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Infrastructure.Configurations;
+using Infrastructure.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MoviesDomain;
 
-namespace Infrastructure
+namespace Infrastructure;
+
+public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
-    public sealed class ApplicationDbContext : DbContext
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+        : base(options) { }
+
+    public DbSet<Movie> Movies { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) { }
-
-        public DbSet<Movie> Movies { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new MovieConfiguration());
-        }
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfiguration(new MovieConfiguration());
     }
 }
