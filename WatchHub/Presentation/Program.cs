@@ -1,4 +1,5 @@
 using Infrastructure;
+using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,9 +17,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(defaultConnection);
 });
 
-builder.Services.AddIdentity<ApplictionUser, Microsoft.AspNetCore.Identity.IdentityRole>()
-    .AddEntityFrameworkStores()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
