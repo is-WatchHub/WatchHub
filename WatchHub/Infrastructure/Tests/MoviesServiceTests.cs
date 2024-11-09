@@ -80,4 +80,121 @@ public class MoviesServiceTests
         Assert.Equal(movie.Title, result.Title);
         _movieRepositoryMock.Verify(repo => repo.CreateAsync(movie), Times.Once);
     }
+    
+    [Fact]
+    public async Task GetMovieInfoByIdAsync_ShouldReturnMovieInfo_WhenMovieExists()
+    {
+        // Arrange
+        var movieId = Guid.NewGuid();
+        var movie = new Movie
+        {
+            Id = movieId,
+            Description = "Test Description",
+            Media = new MovieMedia { ContentUrl = "https://content-url.com" }
+        };
+
+        var expectedResponse = new AdditionalMovieInfoResponseDto
+        {
+            Id = movieId,
+            Description = movie.Description,
+            ContentUrl = movie.Media.ContentUrl
+        };
+
+        _movieRepositoryMock.Setup(repo => repo.GetByIdAsync(movieId)).ReturnsAsync(movie);
+        _moviesMapperMock.Setup(mapper => mapper.Map<Movie, AdditionalMovieInfoResponseDto>(movie)).Returns(expectedResponse);
+
+        // Act
+        var result = await _moviesService.GetMovieInfoByIdAsync(movieId);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedResponse.Id, result.Id);
+        Assert.Equal(expectedResponse.Description, result.Description);
+        Assert.Equal(expectedResponse.ContentUrl, result.ContentUrl);
+
+        _movieRepositoryMock.Verify(repo => repo.GetByIdAsync(movieId), Times.Once);
+        _moviesMapperMock.Verify(mapper => mapper.Map<Movie, AdditionalMovieInfoResponseDto>(movie), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetMovieInfoByIdAsync_ShouldReturnNull_WhenMovieDoesNotExist()
+    {
+        // Arrange
+        var movieId = Guid.NewGuid();
+
+        _movieRepositoryMock.Setup(repo => repo.GetByIdAsync(movieId)).ReturnsAsync((Movie)null);
+
+        // Act
+        var result = await _moviesService.GetMovieInfoByIdAsync(movieId);
+
+        // Assert
+        Assert.Null(result);
+        _movieRepositoryMock.Verify(repo => repo.GetByIdAsync(movieId), Times.Once);
+        _moviesMapperMock.Verify(mapper => mapper.Map<Movie, AdditionalMovieInfoResponseDto>(It.IsAny<Movie>()), Times.Once);
+    }
+
+    
+     [Fact]
+    public async Task GetMoviesByCriteriaAsync_ShouldReturnMoviesByGenre_WhenGenreIsSpecified()
+    {
+        // Arrange
+        var genre = "Comedy";
+        var filterDto = new MovieFilterDto { Genre = genre };
+
+        var movies = new List<Movie>
+        {
+            new Movie { Id = Guid.NewGuid(), Title = "Comedy Movie", Genre = Genre.Comedy }
+        };
+        _movieRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(movies);
+
+        _moviesMapperMock
+            .Setup(mapper => mapper.Map<Movie, MovieInfoResponseDto>(It.IsAny<Movie>()))
+            .Returns(new MovieInfoResponseDto { Id = movies.First().Id, Title = movies.First().Title, Genre = movies.First().Genre.ToString()});
+
+        // Act
+        var result = await _moviesService.GetMoviesByCriteriaAsync(filterDto);
+
+        // Assert
+        Assert.NotEmpty(result);
+        Assert.All(result, movie => Assert.Equal(genre, movie.Genre));
+    }
+
+    [Fact]
+    public async Task GetRandomMovieByGenreAsync_ShouldReturnRandomMovie_WhenMoviesExistForGenre()
+    {
+        // Arrange
+        var genre = "Comedy";
+        var genreDto = new RandomMovieByGenreDto { Genre = genre };
+
+        var movies = new List<Movie>
+        {
+            new Movie { Id = Guid.NewGuid(), Title = "Comedy Movie", Genre = Genre.Comedy },
+            new Movie { Id = Guid.NewGuid(), Title = "Another Comedy Movie", Genre = Genre.Comedy }
+        };
+        _movieRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(movies);
+
+        _moviesMapperMock
+            .Setup(mapper => mapper.Map<Movie, FullResponseMovieDto>(It.IsAny<Movie>()))
+            .Returns<Movie>(m => new FullResponseMovieDto { Id = m.Id, Title = m.Title, Genre = m.Genre.ToString()});
+
+        // Act
+        var result = await _moviesService.GetRandomMovieByGenreAsync(genreDto);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(genre, result.Genre);
+    }
+
+    [Fact]
+    public async Task GetRandomMovieByGenreAsync_ShouldThrowException_WhenNoMoviesExistForGenre()
+    {
+        // Arrange
+        var genre = "Fantasy";
+        var genreDto = new RandomMovieByGenreDto { Genre = genre };
+
+        _movieRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(new List<Movie>());
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _moviesService.GetRandomMovieByGenreAsync(genreDto));
+    }
 }
