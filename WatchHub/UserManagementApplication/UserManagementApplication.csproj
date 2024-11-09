@@ -10,8 +10,4 @@
       <ProjectReference Include="..\UserManagementDomain\UserManagementDomain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Interfaces\" />
-    </ItemGroup>
-
 </Project>

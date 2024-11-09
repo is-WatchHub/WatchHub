@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using UserManagementApplication;
 using UserManagementApplication.Dtos;
-using UserManagementApplication.Dtos.Results;
+using UserManagementApplication.Dtos.Incoming;
+using UserManagementApplication.Dtos.Outgoing;
+using UserManagementApplication.Services;
 
 namespace Infrastructure.Services;
 
@@ -37,5 +39,29 @@ public class UserManagementService : IUserManagementService
         };
         var result = await _userManager.CreateAsync(user, dto.Password);
         return new CreateUserResultDto(result.Succeeded, result.Errors.Select(x => $"{x.Code} -- {x.Description}"));
+    }
+
+    public Task<GetUserResultDto?> GetUser(Guid id)
+    {
+        var foundUser = _userManager.Users.FirstOrDefault(u => u.Id.Equals(id.ToString()));
+        if(foundUser == null) return Task.FromResult<GetUserResultDto?>(null);
+        
+        return Task.FromResult(new GetUserResultDto(foundUser.Id)
+        {
+            Email = foundUser.Email,
+            Login = foundUser.UserName
+        });
+    }
+
+    public Task<GetUserResultDto?> GetUser(string username)
+    {
+        var foundUser = _userManager.Users.FirstOrDefault(u => u.UserName != null && u.UserName.Equals(username));
+        if(foundUser == null) return Task.FromResult<GetUserResultDto?>(null);
+        
+        return Task.FromResult(new GetUserResultDto(foundUser.Id)
+        {
+            Email = foundUser.Email,
+            Login = foundUser.UserName
+        });
     }
 }
