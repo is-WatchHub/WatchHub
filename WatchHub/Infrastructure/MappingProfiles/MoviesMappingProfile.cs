@@ -9,16 +9,16 @@ public class MoviesMappingProfile : Profile
 {
     public MoviesMappingProfile()
     {
+        CreateMap<CreateMovieDto, MovieMedia>()
+            .ForMember(dest => dest.ContentUrl, opt => opt.MapFrom(src => src.ContentUrl))
+            .ForMember(dest => dest.CoverImageUrl, opt => opt.MapFrom(src => src.CoverImageUrl));
+
         CreateMap<CreateMovieDto, Movie>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()))
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest=>dest.Title,opt=>opt.MapFrom(src=>src.Title))
             .ForMember(dest=>dest,opt=>opt.MapFrom(src=>src.Description))
             .ForMember(dest => dest.Genre, opt => opt.MapFrom(src=>ConvertToGenre(src.Genre)))
-            .ForMember(dest => dest.Media, opt => opt.MapFrom(src => new MovieMedia
-            {
-                ContentUrl = src.ContentUrl,
-                CoverImageUrl = src.CoverImageUrl
-            }))
+            .ForMember(dest => dest.Media, opt => opt.MapFrom(src => src))
             .ReverseMap()
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
@@ -35,11 +35,7 @@ public class MoviesMappingProfile : Profile
             .ForMember(dest => dest.Title, opt=>opt.Ignore())
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Genre, opt=>opt.Ignore())
-            .ForMember(dest => dest.Media, opt => opt.MapFrom(src => new MovieMedia
-            {
-                ContentUrl = src.ContentUrl,
-                CoverImageUrl = string.Empty
-            }));
+            .ForMember(dest => dest.Media, opt => opt.MapFrom(src => src));
         
         CreateMap<Movie, FullResponseMovieDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -53,11 +49,7 @@ public class MoviesMappingProfile : Profile
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => ConvertToGenre(src.Genre)))
-            .ForMember(dest => dest.Media, opt => opt.MapFrom(src => new MovieMedia
-            {
-                ContentUrl = src.ContentUrl,
-                CoverImageUrl = src.CoverImageUrl
-            }));
+            .ForMember(dest => dest.Media, opt => opt.MapFrom(src => src));
         
         CreateMap<Movie, MovieInfoResponseDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -69,15 +61,16 @@ public class MoviesMappingProfile : Profile
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Description, opt=>opt.Ignore())
             .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre))
-            .ForMember(dest => dest.Media, opt => opt.MapFrom(src => new MovieMedia
-            {
-                ContentUrl = string.Empty,
-                CoverImageUrl = src.CoverImageUrl
-            }));
+            .ForMember(dest => dest.Media, opt => opt.MapFrom(src => src));
     }
     
     private static Genre ConvertToGenre(string genre)
     {
-        return Enum.TryParse<Genre>(genre, true, out var parsedGenre) ? parsedGenre : Genre.Comedy;
+        if (Enum.TryParse<Genre>(genre, true, out var parsedGenre))
+        {
+            return parsedGenre;
+        }
+
+        throw new ArgumentException($"The genre '{genre}' is not a valid Genre.");
     }
 }
