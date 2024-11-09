@@ -8,7 +8,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using UserManagementApplication.Dtos;
+using UserManagementApplication.Dtos.Incoming;
 using Xunit;
+using AuthenticationService = Infrastructure.Services.AuthenticationService;
 
 namespace Infrastructure.Tests;
 
@@ -17,6 +19,7 @@ public class UserManagementServiceTests
     private Mock<UserManager<ApplicationUser>> _userManagerMock;
     private Mock<SignInManager<ApplicationUser>> _signInManagerMock;
     private UserManagementService _userManagementService;
+    private AuthenticationService _authenticationService;
 
     [Fact]
     public async Task Login_Should_Call_PasswordSignInAsync_With_Correct_Parameters()
@@ -87,6 +90,7 @@ public class UserManagementServiceTests
     private void Arrange(List<ApplicationUser> users)
     {
         _userManagerMock = MockUserManager<ApplicationUser>(users);
+        
         _signInManagerMock = new Mock<SignInManager<ApplicationUser>>(
             _userManagerMock.Object,
             Mock.Of<IHttpContextAccessor>(),
@@ -94,7 +98,12 @@ public class UserManagementServiceTests
             Mock.Of<IOptions<IdentityOptions>>(),
             Mock.Of<ILogger<SignInManager<ApplicationUser>>>(),
             Mock.Of<IAuthenticationSchemeProvider>());
-        _userManagementService = new UserManagementService(_userManagerMock.Object, _signInManagerMock.Object);
+        _signInManagerMock.Setup(m =>
+                m.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+            .Returns(Task.FromResult(SignInResult.Success));
+        
+        _authenticationService = new AuthenticationService(_signInManagerMock.Object);
+        _userManagementService = new UserManagementService(_userManagerMock.Object, _signInManagerMock.Object, _authenticationService);
     }
 
     private static Mock<UserManager<TUser>> MockUserManager<TUser>(List<TUser> ls) where TUser : class

@@ -10,22 +10,22 @@ public class UserManagementService : IUserManagementService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IAuthenticationService _authService;
 
-    public UserManagementService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public UserManagementService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IAuthenticationService authService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _authService = authService;
     }
 
-    public async Task<SignInResultDto> Login(LoginDto model)
-    {
-        var result = await _signInManager.PasswordSignInAsync(model.Name, model.Password, model.RememberMe, false);
-        return new SignInResultDto(result.Succeeded, result.IsLockedOut, result.IsNotAllowed);
-    }
+    public async Task<SignInResultDto> Login(LoginDto model) =>
+        await _authService.Login(model);
+
 
 
     public async Task Logout() =>
-        await _signInManager.SignOutAsync();
+        await _authService.Logout();
 
 
     public async Task<CreateUserResultDto> CreateUser(CreateUserDto dto)
