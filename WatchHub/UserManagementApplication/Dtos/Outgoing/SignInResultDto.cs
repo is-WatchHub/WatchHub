@@ -1,4 +1,4 @@
-﻿namespace UserManagementApplication.Dtos.Results;
+﻿namespace UserManagementApplication.Dtos.Outgoing;
 
 public class SignInResultDto
 {
