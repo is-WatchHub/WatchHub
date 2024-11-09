@@ -1,11 +1,11 @@
-﻿
-using UserManagementApplication.Dtos;
+﻿using UserManagementApplication.Dtos;
+using UserManagementApplication.Dtos.Results;
 
-namespace UserManagementApplication.Interfaces;
+namespace UserManagementApplication;
 
 public interface IUserManagementService
 {
-    public Task Login(LoginDto model);
+    public Task<SignInResultDto> Login(LoginDto model);
     public Task Logout();
-    public Task CreateUser(CreateUserDto dto);
+    public Task<CreateUserResultDto> CreateUser(CreateUserDto dto);
 }
