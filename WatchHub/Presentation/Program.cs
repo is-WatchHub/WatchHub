@@ -1,3 +1,8 @@
+using Infrastructure;
+using Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
 using Infrastructure.Mappers;
 using Infrastructure.MappingProfiles;
 using IntegrationApplication.Mappers;
@@ -5,6 +10,24 @@ using MoviesApplication.Mappers;
 using UserManagementApplication.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrEmpty(defaultConnection))
+{
+    throw new ArgumentNullException(nameof(defaultConnection), "Connection string cannot be null or empty.");
+}
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseNpgsql(defaultConnection);
+});
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(
     typeof(UserManagementMappingProfile),
@@ -28,5 +51,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
