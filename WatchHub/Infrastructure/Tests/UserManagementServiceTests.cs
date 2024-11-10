@@ -1,14 +1,12 @@
-﻿using Infrastructure.Models;
-using Infrastructure.Services;
+﻿using Infrastructure.Dtos;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using UserManagementApplication.Dtos;
-using UserManagementApplication.Dtos.Incoming;
+using UserManagementApplication.Services;
 using Xunit;
 using AuthenticationService = Infrastructure.Services.AuthenticationService;
 
@@ -27,7 +25,7 @@ public class UserManagementServiceTests
         // Arrange
         var loginDto = new LoginDto
         {
-            Name = "testUser",
+            UserName = "testUser",
             Password = "password123",
             RememberMe = true
         };
@@ -35,11 +33,11 @@ public class UserManagementServiceTests
         Arrange(new List<ApplicationUser>());
 
         // Act
-        await _userManagementService.Login(loginDto);
+        await _authenticationService.LoginAsync(loginDto);
 
         // Assert
         _signInManagerMock.Verify(
-            s => s.PasswordSignInAsync(loginDto.Name, loginDto.Password, loginDto.RememberMe, false), Times.Once);
+            s => s.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, false), Times.Once);
     }
 
     [Fact]
@@ -48,7 +46,7 @@ public class UserManagementServiceTests
         // Arrange
         Arrange(new List<ApplicationUser>());
         // Act
-        await _userManagementService.Logout();
+        await _authenticationService.LogoutAsync();
 
         // Assert
         _signInManagerMock.Verify(s => s.SignOutAsync(), Times.Once);
@@ -60,14 +58,14 @@ public class UserManagementServiceTests
         // Arrange
         var createUserDto = new CreateUserDto
         {
-            Name = "testUser",
+            UserName = "testUser",
             Email = "test@example.com",
             Password = "password123"
         };
 
         var user = new ApplicationUser
         {
-            UserName = createUserDto.Name,
+            UserName = createUserDto.UserName,
             Email = createUserDto.Email
         };
         
@@ -79,7 +77,7 @@ public class UserManagementServiceTests
             .ReturnsAsync(IdentityResult.Success);
 
         // Act
-        await _userManagementService.CreateUser(createUserDto);
+        await _authenticationService.CreateAsync(createUserDto);
 
         // Assert
         _userManagerMock.Verify(
@@ -102,8 +100,7 @@ public class UserManagementServiceTests
                 m.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
             .Returns(Task.FromResult(SignInResult.Success));
         
-        _authenticationService = new AuthenticationService(_signInManagerMock.Object);
-        _userManagementService = new UserManagementService(_userManagerMock.Object, _signInManagerMock.Object, _authenticationService);
+        _authenticationService = new AuthenticationService(_signInManagerMock.Object, _userManagerMock.Object);
     }
 
     private static Mock<UserManager<TUser>> MockUserManager<TUser>(List<TUser> ls) where TUser : class

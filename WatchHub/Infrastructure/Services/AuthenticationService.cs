@@ -1,20 +1,36 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.Dtos;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
-using UserManagementApplication.Dtos.Incoming;
-using UserManagementApplication.Dtos.Outgoing;
-using UserManagementApplication.Services;
 
 namespace Infrastructure.Services;
 
-public class AuthenticationService(SignInManager<ApplicationUser> _signInManager) : IAuthenticationService
+public class AuthenticationService : IAuthenticationService
 {
-    public async Task<SignInResultDto> Login(LoginDto model)
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    
+    public AuthenticationService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
     {
-        var result = await _signInManager.PasswordSignInAsync(model.Name, model.Password, model.RememberMe, false);
-        return new SignInResultDto(result.Succeeded, result.IsLockedOut, result.IsNotAllowed);
+        _signInManager = signInManager;
+        _userManager = userManager;
     }
 
-    public async Task Logout() =>
-        await _signInManager.SignOutAsync();
-    
+    public async Task<IdentityResult> CreateAsync(CreateUserDto createUserDto)
+    {
+        var user = new ApplicationUser
+        {
+            UserName = createUserDto.UserName,
+            Email = createUserDto.Email
+        };
+
+        var result = await _userManager.CreateAsync(user, createUserDto.Password);
+
+        return result;
+    }
+
+    public async Task<SignInResult> LoginAsync(LoginDto loginDto) =>
+        await _signInManager
+            .PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, false);
+
+    public async Task LogoutAsync() => await _signInManager.SignOutAsync();
 }

@@ -1,10 +1,11 @@
-﻿using UserManagementApplication.Dtos.Incoming;
-using UserManagementApplication.Dtos.Outgoing;
+﻿using Infrastructure.Dtos;
+using Microsoft.AspNetCore.Identity;
 
-namespace UserManagementApplication.Services;
+namespace Infrastructure.Services;
 
 public interface IAuthenticationService
 {
-    Task<SignInResultDto> Login(LoginDto model);
-    Task Logout();
+    Task<IdentityResult> CreateAsync(CreateUserDto createUserDto);
+    Task<SignInResult> LoginAsync(LoginDto loginDto);
+    Task LogoutAsync();
 }
