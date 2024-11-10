@@ -22,7 +22,7 @@ public class MoviesServiceTests
     }
 
     [Fact]
-    public async Task GetMoviesAsync_ShouldReturnListOfMovies()
+    public async Task GetAsync_ShouldReturnListOfMovies()
     {
         // Arrange
         var movies = new List<Movie> { new Movie { Id = Guid.NewGuid(), Title = "Test Movie" } };
@@ -33,7 +33,7 @@ public class MoviesServiceTests
             .Returns(new MovieInfoResponseDto { Id = Guid.NewGuid(), Title = "Test Movie" });
 
         // Act
-        var result = await _moviesService.GetMoviesAsync();
+        var result = await _moviesService.GetAsync();
 
         // Assert
         Assert.NotEmpty(result);
@@ -41,7 +41,7 @@ public class MoviesServiceTests
     }
 
     [Fact]
-    public async Task GetMovieByIdAsync_ShouldReturnMovie_WhenMovieExists()
+    public async Task GetByIdAsync_ShouldReturnMovie_WhenMovieExists()
     {
         // Arrange
         var movie = new Movie { Id = Guid.NewGuid(), Title = "Test Movie" };
@@ -52,7 +52,7 @@ public class MoviesServiceTests
             .Returns(new FullResponseMovieDto { Id = movie.Id, Title = movie.Title });
 
         // Act
-        var result = await _moviesService.GetMovieByIdAsync(movie.Id);
+        var result = await _moviesService.GetByIdAsync(movie.Id);
 
         // Assert
         Assert.NotNull(result);
@@ -61,7 +61,7 @@ public class MoviesServiceTests
     }
 
     [Fact]
-    public async Task AddMovieAsync_ShouldAddMovieAndReturnCreatedMovie()
+    public async Task AddAsync_ShouldAddMovieAndReturnCreatedMovie()
     {
         // Arrange
         var createMovieDto = new CreateMovieDto { Title = "New Movie", Description = "Test Description" };
@@ -73,7 +73,7 @@ public class MoviesServiceTests
                          .Returns(new FullResponseMovieDto { Id = movie.Id, Title = movie.Title });
 
         // Act
-        var result = await _moviesService.AddMovieAsync(createMovieDto);
+        var result = await _moviesService.AddAsync(createMovieDto);
 
         // Assert
         Assert.NotNull(result);
@@ -82,7 +82,7 @@ public class MoviesServiceTests
     }
     
     [Fact]
-    public async Task GetMovieInfoByIdAsync_ShouldReturnMovieInfo_WhenMovieExists()
+    public async Task GetInfoByIdAsync_ShouldReturnMovieInfo_WhenMovieExists()
     {
         // Arrange
         var movieId = Guid.NewGuid();
@@ -104,7 +104,7 @@ public class MoviesServiceTests
         _moviesMapperMock.Setup(mapper => mapper.Map<Movie, AdditionalMovieInfoResponseDto>(movie)).Returns(expectedResponse);
 
         // Act
-        var result = await _moviesService.GetMovieInfoByIdAsync(movieId);
+        var result = await _moviesService.GetInfoByIdAsync(movieId);
 
         // Assert
         Assert.NotNull(result);
@@ -117,7 +117,7 @@ public class MoviesServiceTests
     }
 
     [Fact]
-    public async Task GetMovieInfoByIdAsync_ShouldReturnNull_WhenMovieDoesNotExist()
+    public async Task GetInfoByIdAsync_ShouldReturnNull_WhenMovieDoesNotExist()
     {
         // Arrange
         var movieId = Guid.NewGuid();
@@ -125,7 +125,7 @@ public class MoviesServiceTests
         _movieRepositoryMock.Setup(repo => repo.GetByIdAsync(movieId)).ReturnsAsync((Movie)null);
 
         // Act
-        var result = await _moviesService.GetMovieInfoByIdAsync(movieId);
+        var result = await _moviesService.GetInfoByIdAsync(movieId);
 
         // Assert
         Assert.Null(result);
@@ -135,7 +135,7 @@ public class MoviesServiceTests
 
     
      [Fact]
-    public async Task GetMoviesByCriteriaAsync_ShouldReturnMoviesByGenre_WhenGenreIsSpecified()
+    public async Task GetByFilterAsync_ShouldReturnMoviesByGenre_WhenGenreIsSpecified()
     {
         // Arrange
         var genre = "Comedy";
@@ -152,7 +152,7 @@ public class MoviesServiceTests
             .Returns(new MovieInfoResponseDto { Id = movies.First().Id, Title = movies.First().Title, Genre = movies.First().Genre.ToString()});
 
         // Act
-        var result = await _moviesService.GetMoviesByCriteriaAsync(filterDto);
+        var result = await _moviesService.GetByFilterAsync(filterDto);
 
         // Assert
         Assert.NotEmpty(result);
@@ -160,7 +160,7 @@ public class MoviesServiceTests
     }
 
     [Fact]
-    public async Task GetRandomMovieByGenreAsync_ShouldReturnRandomMovie_WhenMoviesExistForGenre()
+    public async Task GetRandomByGenreAsync_ShouldReturnRandomMovie_WhenMoviesExistForGenre()
     {
         // Arrange
         var genre = "Comedy";
@@ -178,7 +178,7 @@ public class MoviesServiceTests
             .Returns<Movie>(m => new FullResponseMovieDto { Id = m.Id, Title = m.Title, Genre = m.Genre.ToString()});
 
         // Act
-        var result = await _moviesService.GetRandomMovieByGenreAsync(genreDto);
+        var result = await _moviesService.GetRandomByGenreAsync(genreDto);
 
         // Assert
         Assert.NotNull(result);
@@ -186,7 +186,7 @@ public class MoviesServiceTests
     }
 
     [Fact]
-    public async Task GetRandomMovieByGenreAsync_ShouldThrowException_WhenNoMoviesExistForGenre()
+    public async Task GetRandomByGenreAsync_ShouldThrowException_WhenNoMoviesExistForGenre()
     {
         // Arrange
         var genre = "Fantasy";
@@ -195,6 +195,6 @@ public class MoviesServiceTests
         _movieRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(new List<Movie>());
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _moviesService.GetRandomMovieByGenreAsync(genreDto));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _moviesService.GetRandomByGenreAsync(genreDto));
     }
 }

@@ -5,10 +5,10 @@ namespace MoviesApplication.Services;
 
 public interface IMoviesService
 {
-    Task<IEnumerable<MovieInfoResponseDto>> GetMoviesAsync();
-    Task<FullResponseMovieDto> GetMovieByIdAsync(Guid id);
-    Task<AdditionalMovieInfoResponseDto> GetMovieInfoByIdAsync(Guid id);
-    Task<FullResponseMovieDto> AddMovieAsync(CreateMovieDto createMovieDto);
-    Task<IEnumerable<MovieInfoResponseDto>> GetMoviesByCriteriaAsync(MovieFilterDto filterDto);
-    Task<FullResponseMovieDto> GetRandomMovieByGenreAsync(RandomMovieByGenreDto genreDto);
+    Task<IEnumerable<MovieInfoResponseDto>> GetAsync();
+    Task<FullResponseMovieDto> GetByIdAsync(Guid id);
+    Task<AdditionalMovieInfoResponseDto> GetInfoByIdAsync(Guid id);
+    Task<FullResponseMovieDto> AddAsync(CreateMovieDto createMovieDto);
+    Task<IEnumerable<MovieInfoResponseDto>> GetByFilterAsync(MovieFilterDto filterDto);
+    Task<FullResponseMovieDto> GetRandomByGenreAsync(RandomMovieByGenreDto genreDto);
 }
