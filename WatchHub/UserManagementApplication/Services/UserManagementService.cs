@@ -17,7 +17,7 @@ public class UserManagementService : IUserManagementService
     
     public async Task<UserDto> GetByUserNameAsync(string username)
     {
-        var user = await _repository.GetByLogin(username);
+        var user = await _repository.GetByUserNameAsync(username);
         var result = _mapper.Map<User, UserDto>(user);
 
         return result;

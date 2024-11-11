@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services;
 
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
