@@ -33,7 +33,7 @@ internal class IntegrationConfiguration : IEntityTypeConfiguration<Integration>
         builder
             .HasMany(x => x.Platforms)
             .WithOne()
-            .HasForeignKey("integration_id")
+            .HasForeignKey(IntegrationTableConstants.INTEGRATION_ID_COLUMN_NAME)
             .IsRequired();
     }
 }

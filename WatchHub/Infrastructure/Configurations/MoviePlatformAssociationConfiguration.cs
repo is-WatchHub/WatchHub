@@ -29,7 +29,7 @@ internal class MoviePlatformAssociationConfiguration : IEntityTypeConfiguration<
         builder
             .HasOne(x => x.Platform)
             .WithOne()
-            .HasForeignKey("movie_platform_association_id")
+            .HasForeignKey(MoviePlatformAssociationTableConstants.MOVIE_PLATFORM_ASSOCIATION_ID_COLUMN_NAME)
             .IsRequired();
     }
 }
