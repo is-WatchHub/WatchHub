@@ -5,5 +5,5 @@ public class MovieInformationDto
     public string Director { get; set; }
     public RatingDto Rating { get; set; }
     public List<string> ActorNames { get; set; }
-    public List<string> AwardTitles { get; set; }
+    public string Awards { get; set; }
 }
