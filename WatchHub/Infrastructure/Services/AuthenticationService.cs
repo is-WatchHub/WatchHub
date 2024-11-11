@@ -15,7 +15,7 @@ public class AuthenticationService
         _userManager = userManager;
     }
 
-    public async Task<IdentityResult> CreateAsync(CreateUserDto createUserDto)
+    public async Task<IdentityResult> CreateUserAsync(CreateUserDto createUserDto)
     {
         var user = new ApplicationUser
         {

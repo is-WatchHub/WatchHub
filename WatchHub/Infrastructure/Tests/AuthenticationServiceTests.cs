@@ -45,7 +45,7 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
-    public async Task CreateAsync_ShouldReturnSuccess_WhenUserIsCreated()
+    public async Task CreateUserAsync_ShouldReturnSuccess_WhenUserIsCreated()
     {
         // Arrange
         var createUserDto = new CreateUserDto
@@ -56,7 +56,7 @@ public class AuthenticationServiceTests
         };
 
         // Act
-        var result = await _authenticationService.CreateAsync(createUserDto);
+        var result = await _authenticationService.CreateUserAsync(createUserDto);
 
         // Assert
         Assert.True(result.Succeeded);
