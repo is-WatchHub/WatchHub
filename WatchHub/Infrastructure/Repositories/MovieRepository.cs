@@ -10,7 +10,7 @@ internal class MovieRepository : IMovieRepository
 
     public MovieRepository(ApplicationDbContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public async Task<Movie> CreateAsync(Movie movie)
@@ -28,9 +28,9 @@ internal class MovieRepository : IMovieRepository
     public async Task<Movie> GetByIdAsync(Guid id)
     {
         var movie = await _context.Movies.FindAsync(id);
-        if (movie == null)
+        if (movie is null)
         {
-            throw new NotFoundException("Movie with this id does not exist!");
+            throw new NotFoundException($"Movie with this id {id} does not exist!");
         }
 
         return movie;
