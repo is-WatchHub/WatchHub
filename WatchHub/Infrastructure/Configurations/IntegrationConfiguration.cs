@@ -1,18 +1,13 @@
 ﻿using Infrastructure.Constants;
-using IntegrationDomain;
+using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Configurations;
 
-internal class IntegrationConfiguration : IEntityTypeConfiguration<Integration>
-{
-    public void Configure(EntityTypeBuilder<Integration> builder)
+internal class IntegrationConfiguration : IEntityTypeConfiguration<IntegrationModel>
+{ 
+    public void Configure(EntityTypeBuilder<IntegrationModel> builder)
     {
         builder
             .ToTable(IntegrationTableConstants.INTEGRATION_TABLE_NAME);
@@ -31,9 +26,9 @@ internal class IntegrationConfiguration : IEntityTypeConfiguration<Integration>
             .IsRequired();
 
         builder
-            .HasMany(x => x.Platforms)
-            .WithOne()
-            .HasForeignKey(IntegrationTableConstants.INTEGRATION_ID_COLUMN_NAME)
+            .HasMany(x => x.Association)
+            .WithOne(x => x.Integration)
+            .HasForeignKey(x => x.IntegrationId)
             .IsRequired();
     }
 }
