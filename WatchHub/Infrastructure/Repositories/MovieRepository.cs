@@ -8,10 +8,8 @@ public class MovieRepository : IMovieRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public MovieRepository(ApplicationDbContext context)
-    {
+    public MovieRepository(ApplicationDbContext context) => 
         _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
 
     public async Task<Movie> CreateAsync(Movie movie)
     {
@@ -20,19 +18,10 @@ public class MovieRepository : IMovieRepository
         return result.Entity;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync()
-    {
-        return await _context.Movies.ToListAsync();
-    }
+    public async Task<IEnumerable<Movie>> GetAllAsync() => await _context.Movies.ToListAsync();
 
-    public async Task<Movie> GetByIdAsync(Guid id)
-    {
-        var movie = await _context.Movies.FindAsync(id);
-        if (movie is null)
-        {
-            throw new NotFoundException($"Movie with this id {id} does not exist!");
-        }
-
-        return movie;
-    }
+    public async Task<Movie> GetByIdAsync(Guid id) =>
+        await _context.Movies
+            .FirstOrDefaultAsync(m => m.Id == id) ?? 
+                    throw new NotFoundException($"Movie with this id {id} does not exist!");
 }
