@@ -1,5 +1,6 @@
 ﻿using UserManagementApplication.Dtos;
 using UserManagementApplication.Mappers;
+using UserManagementApplication.Repositories;
 using UserManagementDomain;
 
 namespace UserManagementApplication.Services;

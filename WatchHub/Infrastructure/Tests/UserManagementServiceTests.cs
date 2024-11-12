@@ -1,6 +1,7 @@
 ﻿using Moq;
 using UserManagementApplication.Dtos;
 using UserManagementApplication.Mappers;
+using UserManagementApplication.Repositories;
 using UserManagementApplication.Services;
 using UserManagementDomain;
 using Xunit;
