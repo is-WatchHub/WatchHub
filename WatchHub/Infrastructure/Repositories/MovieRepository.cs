@@ -4,7 +4,7 @@ using MoviesDomain;
 
 namespace Infrastructure.Repositories;
 
-internal class MovieRepository : IMovieRepository
+public class MovieRepository : IMovieRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -34,17 +34,5 @@ internal class MovieRepository : IMovieRepository
         }
 
         return movie;
-    }
-
-    public async Task<Movie> GetRandomAsync()
-    {
-        var movies = await _context.Movies.ToListAsync();
-        if (!movies.Any())
-        {
-            throw new InvalidOperationException("Can't get random movie because movie table is empty!");
-        }
-
-        var randomIndex = new Random().Next(movies.Count);
-        return movies[randomIndex];
     }
 }
