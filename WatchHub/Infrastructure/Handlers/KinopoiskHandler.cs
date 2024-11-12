@@ -8,7 +8,7 @@ public class KinopoiskHandler : RequestHandler
 {
     private readonly string _apiKey;
     
-    public KinopoiskHandler(string apiKey, string name = "kinopoisk") : base(name) => 
+    public KinopoiskHandler(string apiKey, string name) : base(name) => 
         _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
 
     protected override string PreparingRequest(MoviePlatformAssociation association, HttpClient client)
@@ -63,21 +63,14 @@ public class KinopoiskHandler : RequestHandler
         var ratingImdb = jsonResponse["rating"]?[imdb]?.ToObject<double>() ?? 0.0;
         var ratingFilmCritics = jsonResponse["rating"]?[filmCritics]?.ToObject<double>() ?? 0.0;
 
-        var votesKp = jsonResponse["votes"]?[kp]?.ToObject<int>() ?? 0;
-        var votesImdb = jsonResponse["votes"]?[imdb]?.ToObject<int>() ?? 0;
-        var votesFilmCritics = jsonResponse["votes"]?[filmCritics]?.ToObject<int>() ?? 0;
-
-        movieInformationDto.Rating.Ratings.Add(new ServiceRatingDto{Service = kp, Rating = ratingKp});
-        movieInformationDto.Rating.Ratings.Add(new ServiceRatingDto{Service = imdb, Rating = ratingImdb});
-        movieInformationDto.Rating.Ratings.Add(new ServiceRatingDto{Service = filmCritics, Rating = ratingFilmCritics});
-
-        var sumVotes = votesKp + votesImdb + votesFilmCritics;
-
-        if (sumVotes != 0)
-        {
-            movieInformationDto.Rating.AggregatedValue = ratingKp * ((double) votesKp / sumVotes)
-                                                         + ratingImdb * ((double) votesImdb / sumVotes)
-                                                         + ratingFilmCritics * ((double) votesFilmCritics / sumVotes);
-        } 
+        movieInformationDto.Rating.Ratings
+            .Add(new ServiceRatingDto{Service = kp, Rating = ratingKp});
+        movieInformationDto.Rating.Ratings
+            .Add(new ServiceRatingDto{Service = imdb, Rating = ratingImdb});
+        movieInformationDto.Rating.Ratings
+            .Add(new ServiceRatingDto{Service = filmCritics, Rating = ratingFilmCritics});
+        
+        movieInformationDto.Rating.AggregatedValue = 
+            movieInformationDto.Rating.Ratings.Average(r => r.Rating);
     }
 }

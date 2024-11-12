@@ -8,7 +8,7 @@ public class OmdbHandler : RequestHandler
 {
     private readonly string _apiKey;
     
-    public OmdbHandler(string apiKey, string name = "omdb") : base(name) => 
+    public OmdbHandler(string apiKey, string name) : base(name) => 
         _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
 
     protected override string PreparingRequest(MoviePlatformAssociation association, HttpClient client) =>
