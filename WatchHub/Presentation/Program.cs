@@ -6,6 +6,12 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
+using Infrastructure.Mappers;
+using Infrastructure.MappingProfiles;
+using IntegrationApplication.Mappers;
+using MoviesApplication.Mappers;
+using UserManagementApplication.Mappers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -25,6 +31,16 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddAutoMapper(
+    typeof(UserManagementMappingProfile),
+    typeof(MoviesMappingProfile),
+    typeof(IntegrationMappingProfile)
+);
+
+builder.Services.AddSingleton<IUserManagementMapper, UserManagementMapper>();
+builder.Services.AddSingleton<IMoviesMapper, MoviesMapper>();
+builder.Services.AddSingleton<IIntegrationMapper, IntegrationMapper>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
