@@ -1,6 +1,7 @@
 using AutoMapper;
 using Infrastructure.Dtos;
 using Infrastructure.Models;
+using UserManagementApplication.Dtos;
 using UserManagementDomain;
 
 namespace Infrastructure.MappingProfiles;
@@ -31,5 +32,10 @@ public class UserManagementMappingProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()))
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
+        
+        CreateMap<User, UserDto>()
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(_ => Role.User));
     }
 }
