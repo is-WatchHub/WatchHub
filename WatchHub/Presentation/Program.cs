@@ -21,6 +21,19 @@ if (string.IsNullOrEmpty(defaultConnection))
     throw new ArgumentNullException(nameof(defaultConnection), "Connection string cannot be null or empty.");
 }
 
+var allowedHosts = builder.Configuration.GetSection("AllowedHosts").Get<string[]>() ?? Array.Empty<string>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins(allowedHosts)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(defaultConnection);
@@ -52,6 +65,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseExceptionHandler(errorApp =>
 {
