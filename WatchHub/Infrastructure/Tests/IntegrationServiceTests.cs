@@ -18,6 +18,8 @@ public class IntegrationServiceTests
         var mockRepository = new Mock<IIntegrationRepository>();
         var mockRequestHandler = new Mock<IRequestHandler>();
 
+        var mockHandlers = new List<IRequestHandler>();
+
         var expectedIntegration = new Integration();
 
         mockRepository
@@ -28,7 +30,7 @@ public class IntegrationServiceTests
             .Setup(r => r.CollectMovieInformation(It.IsAny<Integration>(), It.IsAny<MovieInformationDto>()))
             .Returns(Task.CompletedTask);
 
-        var service = new IntegrationService(mockRepository.Object, mockRequestHandler.Object);
+        var service = new IntegrationService(mockRepository.Object, mockHandlers);
 
         // Act
         var result = await service.GetMovieInformationByMovieIdAsync(movieId);

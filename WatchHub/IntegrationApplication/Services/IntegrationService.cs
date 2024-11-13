@@ -6,12 +6,12 @@ namespace IntegrationApplication.Services;
 public class IntegrationService : IIntegrationService
 {
     private readonly IIntegrationRepository _repository;
-    private readonly IRequestHandler _requestHandler;
+    private IRequestHandler _requestHandler;
 
-    public IntegrationService(IIntegrationRepository repository, IRequestHandler requestHandler)
+    public IntegrationService(IIntegrationRepository repository, IEnumerable<IRequestHandler> handlers)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _requestHandler = requestHandler ?? throw new ArgumentNullException(nameof(requestHandler));
+        Handle(handlers);
     }
 
     public async Task<MovieInformationDto> GetMovieInformationByMovieIdAsync(Guid id)
@@ -33,5 +33,22 @@ public class IntegrationService : IIntegrationService
         await _requestHandler.CollectMovieInformation(integration, movieInformation);
 
         return movieInformation;
+    }
+
+    public void Handle(IEnumerable<IRequestHandler> handlers)
+    {
+        IRequestHandler currentHandler = null;
+        foreach (var handler in handlers)
+        {
+            if (currentHandler == null)
+            {
+                _requestHandler = handler;
+                currentHandler = handler;
+            }
+            else
+            {
+                currentHandler = currentHandler.SetNext(handler);
+            }
+        }
     }
 }
