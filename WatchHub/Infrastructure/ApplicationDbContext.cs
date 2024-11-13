@@ -14,11 +14,11 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Movie> Movies { get; set; }
 
-    public DbSet<Platform> Platforms { get; set; }
+    public DbSet<PlatformModel> Platforms { get; set; }
 
-    public DbSet<MoviePlatformAssociation> PlatformAssociations { get; set; }
+    public DbSet<MoviePlatformAssociationModel> PlatformAssociations { get; set; }
 
-    public DbSet<Integration> Integrations { get; set; }
+    public DbSet<IntegrationModel> Integrations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
