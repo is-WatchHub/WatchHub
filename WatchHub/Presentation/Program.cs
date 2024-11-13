@@ -34,9 +34,10 @@ var allowedHosts = builder.Configuration.GetSection("AllowedHosts").Get<string[]
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", builder =>
+    options.AddPolicy("CorsPolicy", cors =>
     {
-        builder.WithOrigins(allowedHosts)
+        cors
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
