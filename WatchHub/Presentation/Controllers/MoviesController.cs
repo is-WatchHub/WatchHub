@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoviesApplication.Dtos.Incoming;
-using MoviesApplication.Dtos.Outgoing;
 using MoviesApplication.Services;
 
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/movies")]
 public class MoviesController : ControllerBase
 {
     private readonly IMoviesService _moviesService;
@@ -18,36 +17,30 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetAllMovies()
     {
-        var movies = new List<MovieInfoResponseDto>();
+        var movies = await _moviesService.GetAsync();
         return Ok(movies);
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetMovieById(Guid id)
     {
         var movie = await _moviesService.GetByIdAsync(id);
-        if (movie == null)
-        {
-            return NotFound(new { Message = "Movie not found" });
-        }
         return Ok(movie);
     }
 
     [HttpGet("{id:guid}/info")]
+    [Authorize]
     public async Task<IActionResult> GetAdditionalInfoById(Guid id)
     {
         var info = await _moviesService.GetInfoByIdAsync(id);
-        if (info == null)
-        {
-            return NotFound(new { Message = "Movie info not found" });
-        }
         return Ok(info);
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> AddMovie([FromBody] CreateMovieDto createMovieDto)
     {
         if (!ModelState.IsValid)
@@ -59,6 +52,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("filter")]
+    [Authorize]
     public async Task<IActionResult> GetMoviesByFilter([FromQuery] MovieFilterDto filterDto)
     {
         var movies = await _moviesService.GetByFilterAsync(filterDto);
