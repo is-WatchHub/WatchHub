@@ -3,7 +3,7 @@ using IntegrationApplication.Mappers;
 
 namespace Infrastructure.Mappers;
 
-public class IntegrationMapper:IIntegrationMapper
+public class IntegrationMapper : IIntegrationMapper
 {
     private readonly IMapper _mapper;
 
