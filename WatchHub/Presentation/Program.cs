@@ -19,8 +19,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddApiEndpoints();
 
+builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -34,8 +36,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
+app.MapIdentityApi<ApplicationUser>();
 
 app.Run();
