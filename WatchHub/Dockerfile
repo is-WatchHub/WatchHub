@@ -17,4 +17,4 @@ RUN dotnet publish "WatchHub/Presentation/Presentation.csproj" -c Release -o /ap
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WebApi.dll"]
+ENTRYPOINT ["dotnet", "Presentation.dll"]
