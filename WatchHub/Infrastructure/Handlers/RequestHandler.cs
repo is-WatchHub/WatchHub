@@ -26,7 +26,7 @@ public abstract class RequestHandler : IRequestHandler
 
     public async Task CollectMovieInformation(Integration integration, MovieInformationDto movieInformationDto)
     {
-        var association = integration.Platforms
+        var association = integration.Associations
             .FirstOrDefault(p => p.Platform.Name == _name);
 
         if (association is null)
