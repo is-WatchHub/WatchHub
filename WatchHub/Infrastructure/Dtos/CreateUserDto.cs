@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserManagementApplication.Dtos;
+namespace Infrastructure.Dtos;
 
 public class CreateUserDto
 {
     [Required]
-    public string Name { get; set; }
+    public string UserName { get; set; }
     
     [Required]
     [DataType(DataType.EmailAddress)]
