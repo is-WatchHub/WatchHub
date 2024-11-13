@@ -30,6 +30,19 @@ if (string.IsNullOrEmpty(defaultConnection))
     throw new ArgumentNullException(nameof(defaultConnection), "Connection string cannot be null or empty.");
 }
 
+var allowedHosts = builder.Configuration.GetSection("AllowedHosts").Get<string[]>() ?? Array.Empty<string>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins(allowedHosts)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(defaultConnection);
@@ -88,6 +101,37 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+app.UseCors("CorsPolicy");
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+        if (exceptionHandlerPathFeature != null)
+        {
+            var errorResponse = new Dictionary<string, object>
+            {
+                { "StatusCode", context.Response.StatusCode },
+                { "Message", "An unexpected error occurred." }
+            };
+            
+            if (app.Environment.IsDevelopment())
+            {
+                errorResponse["Detailed"] = exceptionHandlerPathFeature.Error.Message;
+            }
+
+            var errorJson = JsonSerializer.Serialize(errorResponse);
+
+            await context.Response.WriteAsync(errorJson);
+        }
+    });
+});
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
