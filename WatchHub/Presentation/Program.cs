@@ -1,5 +1,8 @@
+using System.Net;
+using System.Text.Json;
 using Infrastructure;
 using Infrastructure.Models;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -33,6 +36,35 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+        if (exceptionHandlerPathFeature != null)
+        {
+            var errorResponse = new Dictionary<string, object>
+            {
+                { "StatusCode", context.Response.StatusCode },
+                { "Message", "An unexpected error occurred." }
+            };
+            
+            if (app.Environment.IsDevelopment())
+            {
+                errorResponse["Detailed"] = exceptionHandlerPathFeature.Error.Message;
+            }
+
+            var errorJson = JsonSerializer.Serialize(errorResponse);
+
+            await context.Response.WriteAsync(errorJson);
+        }
+    });
+});
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
