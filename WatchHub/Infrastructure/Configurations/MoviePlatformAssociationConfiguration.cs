@@ -1,13 +1,13 @@
 ﻿using Infrastructure.Constants;
-using IntegrationDomain;
+using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations;
 
-internal class MoviePlatformAssociationConfiguration : IEntityTypeConfiguration<MoviePlatformAssociation>
+internal class MoviePlatformAssociationConfiguration : IEntityTypeConfiguration<MoviePlatformAssociationModel>
 {
-    public void Configure(EntityTypeBuilder<MoviePlatformAssociation> builder)
+    public void Configure(EntityTypeBuilder<MoviePlatformAssociationModel> builder)
     {
         builder
             .ToTable(MoviePlatformAssociationTableConstants.MOVIE_PLATFORM_ASSOCIATION_TABLE_NAME);
@@ -27,9 +27,15 @@ internal class MoviePlatformAssociationConfiguration : IEntityTypeConfiguration<
             .IsRequired();
 
         builder
+            .HasOne(x => x.Integration)
+            .WithMany(x => x.Association)
+            .HasForeignKey(x => x.IntegrationId)
+            .IsRequired();
+
+        builder
             .HasOne(x => x.Platform)
-            .WithOne()
-            .HasForeignKey(MoviePlatformAssociationTableConstants.MOVIE_PLATFORM_ASSOCIATION_ID_COLUMN_NAME)
+            .WithMany(x => x.Associations)
+            .HasForeignKey(x => x.PlatformId)
             .IsRequired();
     }
 }
