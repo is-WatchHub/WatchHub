@@ -11,7 +11,7 @@ public class IntegrationService : IIntegrationService
     public IntegrationService(IIntegrationRepository repository, IEnumerable<IRequestHandler> handlers)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        Handle(handlers);
+        _requestHandler = BuildHandlerChain(handlers ?? throw new ArgumentNullException(nameof(handlers)));
     }
 
     public async Task<MovieInformationDto> GetMovieInformationByMovieIdAsync(Guid id)
@@ -35,20 +35,16 @@ public class IntegrationService : IIntegrationService
         return movieInformation;
     }
 
-    public void Handle(IEnumerable<IRequestHandler> handlers)
+    private IRequestHandler BuildHandlerChain(IEnumerable<IRequestHandler> handlers)
     {
-        IRequestHandler currentHandler = null;
-        foreach (var handler in handlers)
-        {
-            if (currentHandler == null)
-            {
-                _requestHandler = handler;
-                currentHandler = handler;
-            }
-            else
-            {
-                currentHandler = currentHandler.SetNext(handler);
-            }
-        }
+        var handlerList = handlers.ToList();
+        
+        if (handlerList is null || handlerList.Count == 0)
+            throw new InvalidOperationException("No request handlers provided.");
+
+        for (int i = 0; i < handlerList.Count - 1; i++)
+            handlerList[i].SetNext(handlerList[i + 1]);
+
+        return handlerList.First();
     }
 }
