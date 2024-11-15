@@ -16,9 +16,10 @@ public class IntegrationServiceTests
         // Arrange
         var movieId = Guid.NewGuid();
         var mockRepository = new Mock<IIntegrationRepository>();
-        var mockRequestHandler = new Mock<IRequestHandler>();
+        var mockRequestHandler1 = new Mock<IRequestHandler>();
+        var mockRequestHandler2 = new Mock<IRequestHandler>();
 
-        var mockHandlers = new List<IRequestHandler>();
+        var mockHandlers = new List<IRequestHandler> { mockRequestHandler1.Object, mockRequestHandler2.Object };
 
         var expectedIntegration = new Integration();
 
@@ -26,7 +27,15 @@ public class IntegrationServiceTests
             .Setup(r => r.GetByMovieIdAsync(movieId))
             .ReturnsAsync(expectedIntegration);
 
-        mockRequestHandler
+        mockRequestHandler1
+            .Setup(r => r.CollectMovieInformation(It.IsAny<Integration>(), It.IsAny<MovieInformationDto>()))
+            .Callback<Integration, MovieInformationDto>((integration, movieInformation) =>
+            {
+                mockRequestHandler2.Object.CollectMovieInformation(integration, movieInformation);
+            })
+            .Returns(Task.CompletedTask);
+
+        mockRequestHandler2
             .Setup(r => r.CollectMovieInformation(It.IsAny<Integration>(), It.IsAny<MovieInformationDto>()))
             .Returns(Task.CompletedTask);
 
@@ -46,7 +55,11 @@ public class IntegrationServiceTests
 
         mockRepository
             .Verify(r => r.GetByMovieIdAsync(movieId), Times.Once);
-        mockRequestHandler
+
+        mockRequestHandler1
+            .Verify(r => r.CollectMovieInformation(expectedIntegration, result), Times.Once);
+
+        mockRequestHandler2
             .Verify(r => r.CollectMovieInformation(expectedIntegration, result), Times.Once);
     }
 }
