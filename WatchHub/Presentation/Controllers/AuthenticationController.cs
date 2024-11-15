@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("api/")]
+[Route("api/auth")]
 public class AuthenticationController : ControllerBase
 {
     private readonly AuthenticationService _authenticationService;
@@ -14,7 +14,7 @@ public class AuthenticationController : ControllerBase
         _authenticationService =
             authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
 
-    [HttpPost("/users")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register(CreateUserDto createUserDto)
     {
         var result = await _authenticationService.CreateUserAsync(createUserDto);
@@ -22,5 +22,13 @@ public class AuthenticationController : ControllerBase
         if (result.Succeeded) return Ok(result);
 
         return BadRequest();
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _authenticationService.LogoutAsync();
+
+        return Ok();
     }
 }

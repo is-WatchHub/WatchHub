@@ -4,7 +4,7 @@ using UserManagementApplication.Services;
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("api/")]
+[Route("api/users")]
 public class UserManagementController : ControllerBase
 {
     private readonly IUserManagementService _userManagementService;
@@ -13,7 +13,7 @@ public class UserManagementController : ControllerBase
         _userManagementService =
             userManagementService ?? throw new ArgumentNullException(nameof(userManagementService));
     
-    [HttpGet("/users")]
+    [HttpGet]
     public async Task<IActionResult> Register([FromQuery] string name)
     {
         var result = await _userManagementService.GetByUserNameAsync(name);
