@@ -6,12 +6,12 @@ namespace IntegrationApplication.Services;
 public class IntegrationService : IIntegrationService
 {
     private readonly IIntegrationRepository _repository;
-    private readonly IRequestHandler _requestHandler;
+    private IRequestHandler _requestHandler;
 
-    public IntegrationService(IIntegrationRepository repository, IRequestHandler requestHandler)
+    public IntegrationService(IIntegrationRepository repository, IEnumerable<IRequestHandler> handlers)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _requestHandler = requestHandler ?? throw new ArgumentNullException(nameof(requestHandler));
+        _requestHandler = BuildHandlerChain(handlers ?? throw new ArgumentNullException(nameof(handlers)));
     }
 
     public async Task<MovieInformationDto> GetMovieInformationByMovieIdAsync(Guid id)
@@ -33,5 +33,18 @@ public class IntegrationService : IIntegrationService
         await _requestHandler.CollectMovieInformation(integration, movieInformation);
 
         return movieInformation;
+    }
+
+    private IRequestHandler BuildHandlerChain(IEnumerable<IRequestHandler> handlers)
+    {
+        var handlerList = handlers.ToList();
+        
+        if (handlerList is null || handlerList.Count == 0)
+            throw new InvalidOperationException("No request handlers provided.");
+
+        for (int i = 0; i < handlerList.Count - 1; i++)
+            handlerList[i].SetNext(handlerList[i + 1]);
+
+        return handlerList.First();
     }
 }

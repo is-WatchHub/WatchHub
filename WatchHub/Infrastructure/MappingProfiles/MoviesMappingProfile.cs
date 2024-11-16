@@ -16,7 +16,7 @@ public class MoviesMappingProfile : Profile
         CreateMap<CreateMovieDto, Movie>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest=>dest.Title,opt=>opt.MapFrom(src=>src.Title))
-            .ForMember(dest=>dest,opt=>opt.MapFrom(src=>src.Description))
+            .ForMember(dest=>dest.Description,opt=>opt.MapFrom(src=>src.Description))
             .ForMember(dest => dest.Genre, opt => opt.MapFrom(src=>ConvertToGenre(src.Genre)))
             .ForMember(dest => dest.Media, opt => opt.MapFrom(src => src))
             .ReverseMap()
@@ -62,6 +62,10 @@ public class MoviesMappingProfile : Profile
             .ForMember(dest => dest.Description, opt=>opt.Ignore())
             .ForMember(dest => dest.Genre, opt => opt.MapFrom(src => src.Genre))
             .ForMember(dest => dest.Media, opt => opt.MapFrom(src => src));
+        
+        CreateMap<MovieMedia, CreateMovieDto>()
+            .ForMember(dest => dest.ContentUrl, opt => opt.MapFrom(src => src.ContentUrl))
+            .ForMember(dest => dest.CoverImageUrl, opt => opt.MapFrom(src => src.CoverImageUrl));
     }
     
     private static Genre ConvertToGenre(string genre)

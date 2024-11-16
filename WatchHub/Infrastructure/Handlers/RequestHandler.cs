@@ -31,7 +31,9 @@ public abstract class RequestHandler : IRequestHandler
 
         if (association is null)
         {
-            _nextHandler?.CollectMovieInformation(integration, movieInformationDto);
+            if (_nextHandler is not null)
+                await _nextHandler
+                    .CollectMovieInformation(integration, movieInformationDto);
             
             return;
         }
@@ -42,7 +44,9 @@ public abstract class RequestHandler : IRequestHandler
 
         if (!response.IsSuccessStatusCode)
         {
-            _nextHandler?.CollectMovieInformation(integration, movieInformationDto);
+            if (_nextHandler is not null)
+                await _nextHandler
+                    .CollectMovieInformation(integration, movieInformationDto);
             
             return;
         }
@@ -53,7 +57,9 @@ public abstract class RequestHandler : IRequestHandler
         
         Collect(jsonResponse, movieInformationDto);
 
-        _nextHandler?.CollectMovieInformation(integration, movieInformationDto);
+        if (_nextHandler is not null)
+            await _nextHandler
+                .CollectMovieInformation(integration, movieInformationDto);
     }
 
     protected virtual string PreparingRequest(MoviePlatformAssociation association, HttpClient client) =>
