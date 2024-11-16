@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MoviesApplication.Dtos.Incoming;
 using MoviesApplication.Services;
 
@@ -23,6 +24,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetMovieById(Guid id)
     {
         var movie = await _moviesService.GetByIdAsync(id);
@@ -30,6 +32,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("{id:guid}/info")]
+    [Authorize]
     public async Task<IActionResult> GetAdditionalInfoById(Guid id)
     {
         var info = await _moviesService.GetInfoByIdAsync(id);
@@ -37,6 +40,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> AddMovie([FromBody] CreateMovieDto createMovieDto)
     {
         if (!ModelState.IsValid)
@@ -48,6 +52,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("filter")]
+    [Authorize]
     public async Task<IActionResult> GetMoviesByFilter([FromQuery] MovieFilterDto filterDto)
     {
         var movies = await _moviesService.GetByFilterAsync(filterDto);

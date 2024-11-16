@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UserManagementApplication.Services;
 
 namespace Presentation.Controllers;
@@ -14,7 +15,8 @@ public class UserManagementController : ControllerBase
             userManagementService ?? throw new ArgumentNullException(nameof(userManagementService));
     
     [HttpGet]
-    public async Task<IActionResult> Register([FromQuery] string name)
+    [Authorize]
+    public async Task<IActionResult> GetByUserNameAsync([FromQuery] string name)
     {
         var result = await _userManagementService.GetByUserNameAsync(name);
 

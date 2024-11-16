@@ -1,4 +1,5 @@
 ﻿using IntegrationApplication.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
@@ -13,6 +14,7 @@ public class IntegrationController : ControllerBase
         _integrationService = integrationService ?? throw new ArgumentNullException(nameof(integrationService));
     
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetMovieById(Guid id)
     {
         var movieInformation = await _integrationService.GetMovieInformationByMovieIdAsync(id);
