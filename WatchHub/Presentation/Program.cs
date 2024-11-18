@@ -7,6 +7,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.HttpLogging;
 using MoviesApplication.Services;
 using Infrastructure.Mappers;
 using Infrastructure.MappingProfiles;
@@ -110,6 +111,13 @@ builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = HttpLoggingFields.All;
+    options.RequestBodyLogLimit = 4096;
+    options.ResponseBodyLogLimit = 4096;
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -120,6 +128,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseCors("CorsPolicy");
+app.UseHttpLogging();
 
 app.UseExceptionHandler(errorApp =>
 {
