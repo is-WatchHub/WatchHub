@@ -2,6 +2,7 @@
 using Infrastructure.Models;
 using IntegrationApplication;
 using IntegrationApplication.Mappers;
+using IntegrationApplication.Repositories;
 using IntegrationDomain;
 using Microsoft.EntityFrameworkCore;
 

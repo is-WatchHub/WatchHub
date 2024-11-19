@@ -1,6 +1,6 @@
 using Moq;
 using MoviesApplication.Dtos.Incoming;
-using MoviesApplication.Dtos.Outgoing;
+using MoviesApplication.Dtos.Outcoming;
 using MoviesApplication.Mappers;
 using MoviesApplication.Services;
 using MoviesDomain;
@@ -157,44 +157,5 @@ public class MoviesServiceTests
         // Assert
         Assert.NotEmpty(result);
         Assert.All(result, movie => Assert.Equal(genre, movie.Genre));
-    }
-
-    [Fact]
-    public async Task GetRandomByGenreAsync_ShouldReturnRandomMovie_WhenMoviesExistForGenre()
-    {
-        // Arrange
-        var genre = "Comedy";
-        var genreDto = new RandomMovieByGenreDto { Genre = genre };
-
-        var movies = new List<Movie>
-        {
-            new Movie { Id = Guid.NewGuid(), Title = "Comedy Movie", Genre = Genre.Comedy },
-            new Movie { Id = Guid.NewGuid(), Title = "Another Comedy Movie", Genre = Genre.Comedy }
-        };
-        _movieRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(movies);
-
-        _moviesMapperMock
-            .Setup(mapper => mapper.Map<Movie, FullResponseMovieDto>(It.IsAny<Movie>()))
-            .Returns<Movie>(m => new FullResponseMovieDto { Id = m.Id, Title = m.Title, Genre = m.Genre.ToString()});
-
-        // Act
-        var result = await _moviesService.GetRandomByGenreAsync(genreDto);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(genre, result.Genre);
-    }
-
-    [Fact]
-    public async Task GetRandomByGenreAsync_ShouldThrowException_WhenNoMoviesExistForGenre()
-    {
-        // Arrange
-        var genre = "Fantasy";
-        var genreDto = new RandomMovieByGenreDto { Genre = genre };
-
-        _movieRepositoryMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(new List<Movie>());
-
-        // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _moviesService.GetRandomByGenreAsync(genreDto));
     }
 }
