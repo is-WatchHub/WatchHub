@@ -1,5 +1,6 @@
 ﻿using IntegrationApplication.Dtos;
 using IntegrationApplication.Handlers;
+using IntegrationApplication.Repositories;
 
 namespace IntegrationApplication.Services;
 

@@ -1,6 +1,6 @@
 using IntegrationDomain;
 
-namespace IntegrationApplication;
+namespace IntegrationApplication.Repositories;
 
 public interface IIntegrationRepository
 {
