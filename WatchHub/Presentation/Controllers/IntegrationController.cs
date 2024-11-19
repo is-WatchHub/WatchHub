@@ -18,6 +18,7 @@ public class IntegrationController : ControllerBase
     public async Task<IActionResult> GetMovieById(Guid id)
     {
         var movieInformation = await _integrationService.GetMovieInformationByMovieIdAsync(id);
+        
         return Ok(movieInformation);
     }
 }

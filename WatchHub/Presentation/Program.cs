@@ -12,9 +12,9 @@ using MoviesApplication.Services;
 using Infrastructure.Mappers;
 using Infrastructure.MappingProfiles;
 using Infrastructure.Repositories;
-using IntegrationApplication;
 using IntegrationApplication.Handlers;
 using IntegrationApplication.Mappers;
+using IntegrationApplication.Repositories;
 using IntegrationApplication.Services;
 using MoviesApplication.Mappers;
 using UserManagementApplication.Mappers;
@@ -164,6 +164,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapIdentityApi<ApplicationUser>();
 
 app.Run();

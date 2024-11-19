@@ -11,15 +11,14 @@ public class MoviesController : ControllerBase
 {
     private readonly IMoviesService _moviesService;
 
-    public MoviesController(IMoviesService moviesService)
-    {
-        _moviesService = moviesService;
-    }
+    public MoviesController(IMoviesService moviesService) => 
+        _moviesService = moviesService ?? throw new ArgumentNullException(nameof(moviesService));
 
     [HttpGet]
     public async Task<IActionResult> GetAllMovies()
     {
         var movies = await _moviesService.GetAsync();
+        
         return Ok(movies);
     }
 
@@ -28,6 +27,7 @@ public class MoviesController : ControllerBase
     public async Task<IActionResult> GetMovieById(Guid id)
     {
         var movie = await _moviesService.GetByIdAsync(id);
+        
         return Ok(movie);
     }
 
@@ -36,6 +36,7 @@ public class MoviesController : ControllerBase
     public async Task<IActionResult> GetAdditionalInfoById(Guid id)
     {
         var info = await _moviesService.GetInfoByIdAsync(id);
+        
         return Ok(info);
     }
 
@@ -48,6 +49,7 @@ public class MoviesController : ControllerBase
             return BadRequest(ModelState);
         }
         var addedMovie = await _moviesService.AddAsync(createMovieDto);
+        
         return CreatedAtAction(nameof(GetMovieById), new { id = addedMovie.Id }, addedMovie);
     }
 
@@ -56,6 +58,7 @@ public class MoviesController : ControllerBase
     public async Task<IActionResult> GetMoviesByFilter([FromQuery] MovieFilterDto filterDto)
     {
         var movies = await _moviesService.GetByFilterAsync(filterDto);
+        
         return Ok(movies);
     }
 }
