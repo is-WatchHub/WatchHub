@@ -1,6 +1,4 @@
-﻿using MoviesDomain;
-
-namespace MoviesApplication.Dtos.Incoming;
+﻿namespace MoviesApplication.Dtos.Incoming;
 
 public class CreateMovieDto
 {

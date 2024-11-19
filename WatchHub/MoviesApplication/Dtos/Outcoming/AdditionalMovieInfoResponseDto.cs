@@ -1,4 +1,4 @@
-﻿namespace MoviesApplication.Dtos.Outgoing;
+﻿namespace MoviesApplication.Dtos.Outcoming;
 
 public class AdditionalMovieInfoResponseDto
 {
