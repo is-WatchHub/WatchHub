@@ -1,6 +1,7 @@
 ﻿using IntegrationApplication;
 using IntegrationApplication.Dtos;
 using IntegrationApplication.Handlers;
+using IntegrationApplication.Repositories;
 using IntegrationApplication.Services;
 using IntegrationDomain;
 using Moq;

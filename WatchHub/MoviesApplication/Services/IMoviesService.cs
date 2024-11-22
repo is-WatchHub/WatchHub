@@ -1,5 +1,5 @@
 using MoviesApplication.Dtos.Incoming;
-using MoviesApplication.Dtos.Outgoing;
+using MoviesApplication.Dtos.Outcoming;
 
 namespace MoviesApplication.Services;
 
@@ -10,5 +10,4 @@ public interface IMoviesService
     Task<AdditionalMovieInfoResponseDto> GetInfoByIdAsync(Guid id);
     Task<FullResponseMovieDto> AddAsync(CreateMovieDto createMovieDto);
     Task<IEnumerable<MovieInfoResponseDto>> GetByFilterAsync(MovieFilterDto filterDto);
-    Task<FullResponseMovieDto> GetRandomByGenreAsync(RandomMovieByGenreDto genreDto);
 }

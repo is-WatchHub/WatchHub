@@ -11,8 +11,8 @@ public class AuthenticationService
     
     public AuthenticationService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
     {
-        _signInManager = signInManager;
-        _userManager = userManager;
+        _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
     public async Task<IdentityResult> CreateUserAsync(CreateUserDto createUserDto)

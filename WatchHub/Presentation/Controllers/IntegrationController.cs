@@ -1,4 +1,5 @@
 ﻿using IntegrationApplication.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +15,11 @@ public class IntegrationController : ControllerBase
         _integrationService = integrationService ?? throw new ArgumentNullException(nameof(integrationService));
     
     [HttpGet("{id:guid}")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> GetMovieById(Guid id)
     {
         var movieInformation = await _integrationService.GetMovieInformationByMovieIdAsync(id);
+        
         return Ok(movieInformation);
     }
 }

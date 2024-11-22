@@ -12,8 +12,8 @@ public class UserManagementService : IUserManagementService
 
     public UserManagementService(IUserManagementMapper mapper, IUserRepository repository)
     {
-        _mapper = mapper;
-        _repository = repository;
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
     
     public async Task<UserDto> GetByUserNameAsync(string username)

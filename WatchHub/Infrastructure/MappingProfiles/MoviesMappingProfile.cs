@@ -1,6 +1,6 @@
 using AutoMapper;
 using MoviesApplication.Dtos.Incoming;
-using MoviesApplication.Dtos.Outgoing;
+using MoviesApplication.Dtos.Outcoming;
 using MoviesDomain;
 
 namespace Infrastructure.MappingProfiles;
