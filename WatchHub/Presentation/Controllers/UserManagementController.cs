@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserManagementApplication.Services;
 
@@ -15,7 +16,7 @@ public class UserManagementController : ControllerBase
             userManagementService ?? throw new ArgumentNullException(nameof(userManagementService));
     
     [HttpGet]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> GetByUserNameAsync([FromQuery] string name)
     {
         var result = await _userManagementService.GetByUserNameAsync(name);

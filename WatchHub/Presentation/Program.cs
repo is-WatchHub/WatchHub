@@ -16,6 +16,7 @@ using IntegrationApplication.Handlers;
 using IntegrationApplication.Mappers;
 using IntegrationApplication.Repositories;
 using IntegrationApplication.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using MoviesApplication.Mappers;
 using UserManagementApplication.Mappers;
 using UserManagementApplication.Repositories;
@@ -52,6 +53,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(defaultConnection);
 });
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/api/auth/login";
+        options.LogoutPath = "/api/auth/logout";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(300);
+        options.SlidingExpiration = true;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -120,6 +133,8 @@ builder.Services.AddHttpLogging(options =>
 
 var app = builder.Build();
 
+app.UseCors("CorsPolicy");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -127,7 +142,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
-app.UseCors("CorsPolicy");
 app.UseHttpLogging();
 
 app.UseExceptionHandler(errorApp =>

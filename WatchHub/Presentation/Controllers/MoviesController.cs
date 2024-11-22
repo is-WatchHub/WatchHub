@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MoviesApplication.Dtos.Incoming;
 using MoviesApplication.Services;
@@ -23,7 +24,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> GetMovieById(Guid id)
     {
         var movie = await _moviesService.GetByIdAsync(id);
@@ -32,7 +33,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("{id:guid}/info")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> GetAdditionalInfoById(Guid id)
     {
         var info = await _moviesService.GetInfoByIdAsync(id);
@@ -41,7 +42,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "Admin")]
     public async Task<IActionResult> AddMovie([FromBody] CreateMovieDto createMovieDto)
     {
         if (!ModelState.IsValid)
@@ -54,7 +55,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpGet("filter")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<IActionResult> GetMoviesByFilter([FromQuery] MovieFilterDto filterDto)
     {
         var movies = await _moviesService.GetByFilterAsync(filterDto);
